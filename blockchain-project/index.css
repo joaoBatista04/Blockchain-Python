@@ -1,0 +1,129 @@
+/* estilos.css */
+
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+    color: #333;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+#AddTransaction {
+    height: 100vh;
+    width: 33%;
+    display: flexbox;
+}
+
+#ResultTransaction {
+    margin-top: 20px;
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 400px;
+    width: 100%;
+}
+
+h1 {
+    color: #4a90e2;
+}
+
+form {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    max-width: 400px;
+    width: 100%;
+}
+
+label {
+    font-weight: bold;
+}
+
+input[type="text"],
+input[type="number"] {
+    width: 100%;
+    padding: 10px;
+    margin: 8px 0 16px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+button {
+    background-color: #4a90e2;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+button:hover {
+    background-color: #357ab8;
+}
+
+h3 {
+    margin-top: 20px;
+}
+
+#resultado {
+    font-weight: bold;
+    color: #4a90e2;
+}
+
+#MineButton {
+    height: 100vh;
+    width: 10%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#minebt {
+    width: 70%;
+    height: 10%;
+    color: white;
+    background-color: limegreen;
+}
+
+#Blockchain {
+    height: 95vh;
+    width: 70%;
+    border: limegreen 2px solid;
+    margin-right: 15px;
+    background-color: lightyellow;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.bloco-chain {
+    height: 14%;
+    flex: 0 0 10%;
+    /* Cada item ocupará 48% da largura do contêiner */
+    box-sizing: border-box;
+    background-color: limegreen;
+    border: solid green;
+    text-align: center;
+    font-size: 9px;
+    font-weight: bolder;
+    margin-top: 5px;
+    color: black;
+    justify-content: center;
+    align-items: center;
+    white-space: pre-line;
+}
+
+#bc_title {
+    color: green;
+    margin: 5px;
+}

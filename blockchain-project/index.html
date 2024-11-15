@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Formulário de Transferência</title>
+    <link rel="stylesheet" href="index.css">
+</head>
+
+<body>
+    <div id="AddTransaction">
+        <h1>Adicionar Transferência</h1>
+        <form id="form-transferencia" action="javascript:void(0);">
+            <label for="sender">Remetente (Sender):</label>
+            <input type="text" id="sender" name="sender" required>
+            <br>
+
+            <label for="recipient">Destinatário (Recipient):</label>
+            <input type="text" id="recipient" name="recipient" required>
+            <br>
+
+            <label for="value">Valor (Value):</label>
+            <input type="number" id="value" name="value" required>
+            <br>
+
+            <button type="submit">Enviar</button>
+        </form>
+
+        <div id="ResultTransaction">
+            <h3>Transação Atual:</h3>
+            <p>ID: <span id="id_transaction"></span></p>
+            <p>Sender: <span id="sender_transaction"></span></p>
+            <p>Recipient: <span id="recipient_transaction"></span></p>
+            <p>Value: <span id="value_transaction"></span></p>
+        </div>
+    </div>
+
+    <div id="MineButton">
+        <button id="minebt">Minerar Bloco</button>
+    </div>
+
+    <div id="Blockchain">
+        <h1 id="bc_title">BLOCKCHAIN</h1>
+    </div>
+
+    <script>
+        function transactions(list) {
+            let stringTransactions = ""
+
+            for (t in list) {
+                console.log(t["sender"])
+                console.log(t["recipient"])
+                console.log(t["value"])
+            }
+        }
+        document.getElementById("minebt").addEventListener("click", async function () {
+            const response = await fetch("http://127.0.0.1:5000/miner")
+                .catch(error => {
+                    console.error("Erro ao chamar a função:", error);
+                });
+
+            if (!response.ok) {
+                throw new Error(`Erro: ${response.statusText}`);
+            }
+
+            const data = await response.json();
+
+            const data_new = Object.values(data);
+
+            const container = document.getElementById("Blockchain");
+
+            for (let chave in data_new[0]) {
+                let next_block_index = Number(chave) + 1;
+                next_block_index = next_block_index.toString()
+
+                const blocoJson = JSON.parse(data_new[0][chave])
+                const hashBlock = JSON.parse(data_new[0][next_block_index])["previous_hash"]
+
+                const blockDiv = document.createElement("div");
+                blockDiv.className = "bloco-chain";
+                blockDiv.textContent = `
+                HASH: ${hashBlock.slice(0, 10)}...
+                TIMESTAMP: ${blocoJson["timestamp"]}
+                PROOF: ${blocoJson["proof"]}
+                PREVIOUS HASH: ${blocoJson["previous_hash"].slice(0, 10)}...
+                TRANSACTIONS: ${JSON.stringify(blocoJson["transactions"])}`
+                container.appendChild(blockDiv);
+            }
+
+            data_new.forEach((bloco, indice) => {
+                const blockDiv = document.createElement("div");
+                const blocoJson = JSON.parse(bloco[(indice + 2).toString()])
+                blockDiv.className = "bloco-chain";
+                blockDiv.textContent = `INDEX: ${blocoJson["index"]} `
+            })
+
+        });
+
+
+        document.getElementById("form-transferencia").onsubmit = async function () {
+            const sender = document.getElementById("sender").value;
+            const recipient = document.getElementById("recipient").value;
+            const value = parseFloat(document.getElementById("value").value);
+
+            // Envia os dados para a API
+            try {
+                const response = await fetch("http://127.0.0.1:5000/addtransfer", {  // Substitua pela URL da sua API
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({ sender: sender, recipient: recipient, value: value })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`Erro: ${response.statusText}`);
+                }
+
+                const data = await response.json();
+                document.getElementById("id_transaction").textContent = data['id'];
+                document.getElementById("sender_transaction").textContent = data['sender'];
+                document.getElementById("recipient_transaction").textContent = data['recipient'];
+                document.getElementById("value_transaction").textContent = data['value'];
+            } catch (error) {
+                document.getElementById("id_transaction").textContent = "Error";
+                document.getElementById("sender_transaction").textContent = "Error";
+                document.getElementById("recipient_transaction").textContent = "Error";
+                document.getElementById("value_transaction").textContent = "Error";
+                console.error(error);
+            }
+        };
+    </script>
+</body>
+
+</html>
