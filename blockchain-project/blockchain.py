@@ -61,7 +61,7 @@ class Blockchain:
         block_string = json.dumps(block, sort_keys=True).encode()
         return hashlib.sha256(block_string).hexdigest()
     
-    def proof_of_work(self, last_proof):
+    def proof_of_work(self, last_block):
         """
         Algoritmo de prova de trabalho:
         - Encontre um número p' tal que hash(pp') contenha 4 zeros à esquerda
@@ -69,22 +69,25 @@ class Blockchain:
         :param last_proof: <int>
         :return: <int>
         """
+        last_proof = last_block['proof']
+        last_hash = self.hash(last_block)
+
         proof = 0
 
-        while self.valid_proof(last_proof, proof) is False:
+        while self.valid_proof(last_proof, proof, last_hash) is False:
             proof += 1
 
         return proof
     
     @staticmethod
-    def valid_proof(last_proof, proof):
+    def valid_proof(last_proof, proof, last_hash):
         """
         Valida a prova: verifica se hash(last_proof, proof) contém 4 zeros à esquerda
         :param last_proof: <int> Prova anterior
         :param proof: <int> Prova atual
         :return: <bool> TRUE se correto, FALSE se não
         """
-        guess = f'{last_proof}{proof}'.encode()
+        guess = f'{last_proof}{proof}{last_hash}'.encode()
         guess_hash = hashlib.sha256(guess).hexdigest()
         return guess_hash[:6] == "000000"
     
@@ -171,3 +174,16 @@ class Blockchain:
         blockchain_json = json.dumps(blockchain)
 
         return blockchain_json
+    
+#blockchain = Blockchain()
+#
+#current_transactions = [{
+#    "sender": "Joao",
+#    "recipient": "Pedro",
+#    "value": 5
+#}]
+#
+#for i in range(0, 20):
+#    blockchain.mine(current_transactions)
+#
+#blockchain.print_chain()
